@@ -1,0 +1,72 @@
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Jay Panchal
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ -- CalculateSalary 7
+ALTER PROCEDURE CalculateSalary
+    @EmpId INT =0,
+	@SalaryAmount DECIMAL(18,2) OUTPUT
+AS
+BEGIN
+    DECLARE @PayScale DECIMAL(18,2)
+    DECLARE @AbsentDaysSalary DECIMAL(18,2)
+    DECLARE @Deduction DECIMAL(18,2)
+
+    SELECT @PayScale = PayScale
+    FROM Employees
+    WHERE Id = @EmpId;
+
+    DECLARE @SalaryId INT;
+    DECLARE @PresentDays INT;
+    DECLARE @AbsentDays INT;
+    DECLARE @MonthDays INT;
+
+    SELECT @SalaryId = sal.Id, 
+           @PresentDays = sal.PresentDays, 
+           @AbsentDays = sal.AbsentDays, 
+           @MonthDays = sal.MonthDays, 
+           @SalaryAmount = sal.SalaryAmount
+    FROM Salaries as sal
+    WHERE sal.EmpIdId = @EmpId
+      AND sal.Month = MONTH(GETDATE())  
+      AND sal.Year = YEAR(GETDATE())  
+
+    -- Calculate absent days' salary
+    SET @AbsentDaysSalary = (@SalaryAmount / @MonthDays) * @AbsentDays
+
+    -- Deduction based on PayScale
+    IF @PayScale < 50000
+    BEGIN
+        SET @Deduction = @AbsentDaysSalary -- 100% deduction
+    END
+    ELSE IF @PayScale BETWEEN 50000 AND 75000
+    BEGIN
+        SET @Deduction = @AbsentDaysSalary * 0.80 -- 80% deduction
+    END
+    ELSE IF @PayScale BETWEEN 75001 AND 100000
+    BEGIN
+        SET @Deduction = @AbsentDaysSalary * 0.70 -- 70% deduction
+    END
+    ELSE IF @PayScale > 100000
+    BEGIN
+        SET @Deduction = @AbsentDaysSalary * 0.50 -- 50% deduction
+    END
+
+    SET @SalaryAmount = @SalaryAmount - @Deduction
+END

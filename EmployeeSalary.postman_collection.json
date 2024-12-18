@@ -1,0 +1,34 @@
+{
+	"info": {
+		"_postman_id": "b7c26828-a605-4d65-b5d7-a19cab4e1d31",
+		"name": "EmployeeSalary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38014357"
+	},
+	"item": [
+		{
+			"name": "GetEmployees",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "AddEmployee",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "CalculateSalary",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
